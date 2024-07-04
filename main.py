@@ -18,12 +18,16 @@ a.click()
 wait = WebDriverWait(driver, 10)
 
 for x in range(10):
-    b = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[3]/span")))[0]
-    lines = b.text.replace("°", "")
-    numbers = re.split("/", lines)
-    print(numbers[0].replace("°", ""))
-    print(numbers[1].replace("°", ""))
-    print("\n")
+    try:    
+        b = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[3]/span")))[0]
+        lines = b.text.replace("°", "")
+        numbers = re.split("/", lines)
+        print(numbers[0].replace("°", ""))
+        print(numbers[1].replace("°", ""))
+        print("\n")
+    except Exception as e:
+        # Do some exception here and send the error message included in the email
+        print(f"Failed to send email: {e}")
 
 
 
