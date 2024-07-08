@@ -19,7 +19,12 @@ def getData():
     temp_list_max = []
     temp_list_min = []
 
-    driver = webdriver.Firefox()
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(options=options)
     driver.get('https://www.dmi.dk/lokation/show/DK/2621213/Grevinge/')
 
  
@@ -35,7 +40,7 @@ def getData():
     counter = 0
     date_array = []
 
-    for x in range(10):
+    for x in range(11):
 
         try:   
             b = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[3]/span")))[0]
@@ -115,6 +120,8 @@ if __name__=="__main__":
         # It is not ideal to let an applicatin sleep, instead we should let the processor do other tasks
         # but since this is the only task that this application are performing at the moment, then this is fine
         # for now. But maybe we should create a Cron tab instead, maybe that will come later.
-        time.sleep(86400)
+        
         text = getData()
+        
         sendMail(text)
+        time.sleep(86400)
