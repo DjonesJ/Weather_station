@@ -34,38 +34,30 @@ def getData():
     a = driver.find_element(By.CLASS_NAME, "coi-banner__accept")
     a.click()
 
- 
-
-
     counter = 0
     date_array = []
 
-    for x in range(11):
-
+    for x in range(10):
         try:   
-            b = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[3]/span")))[0]
-            date_string = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[1]/span[2]")))#/html/body/main/section/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/p[1]/span[2]
-
+            b = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[3]/span")))[0]
+            date_string = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, f"//*[@id='{x}-accordionitem-day']/div/p[1]/span[1]")))
             for x in date_string:
-                date_array.append(x.text)
-
+                date_array.append(x.text.replace("\n", ""))
             lines = b.text.replace("°", "")
             numbers = re.split("/", lines)
             temp_list_max.append(numbers[0].replace("°", ""))
             temp_list_min.append(numbers[1].replace("°", ""))
             counter = counter + 1
-
+            
         except Exception as e:
             # Do some exception here and send the error message included in the email
-            print(f"Failed to send email: {e}")
+            print(f"Failed to obtain weather data from homepage: {e}")
 
     count = 0
     text = ""
     for x in date_array:
         if(int(temp_list_max[count]) > 22):
-            #print(date_array[count])
             text += date_array[count]
-            #print(temp_list_max[count])
             text += "Temp is: " + temp_list_max[count] + "\n"
         count = count + 1
     print(text)
@@ -124,4 +116,5 @@ if __name__=="__main__":
         text = getData()
         
         sendMail(text)
-        time.sleep(86400)
+        #time.sleep(86400)
+        time.sleep(10)
